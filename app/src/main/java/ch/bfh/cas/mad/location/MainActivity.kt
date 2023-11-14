@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 when {
                     isGranted -> getLocation()
                     else -> {
-                        locationPersmissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        requestLocationPermission()
                     }
                 }
             }
@@ -48,9 +49,26 @@ class MainActivity : AppCompatActivity() {
         buttonLocation.setOnClickListener(null)
     }
 
+    private fun requestLocationPermission() {
+        when {
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) ->
+                showLocationPermissionRationale { locationPersmissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION) }
+
+            else -> locationPersmissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+    }
+
+    private fun showLocationPermissionRationale(onOk: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.location_rationale_title))
+            .setMessage(getString(R.string.location_rationale_message))
+            .setPositiveButton(R.string.ok) { _, _ -> onOk() }
+            .show()
+    }
+
     private fun getLocation() {
         if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            locationPersmissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+            requestLocationPermission()
             return
         }
         fusedLocationClient.lastLocation
