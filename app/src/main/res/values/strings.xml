@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">location-android</string>
+    <string name="request_location">Location abfragen</string>
+    <string name="location_rationale_title">Wozu benötigen wir deinen Standort?</string>
+    <string name="location_rationale_message">Wir benötigen deinen Standort um dir die Koordinaten an denen du dich befindest anzuzeigen.</string>
+    <string name="location_text">Latitude: %1$.3f, Longitude: %2$.3f</string>
+    <string name="ok">Ok</string>
 </resources>
